@@ -22,7 +22,7 @@
   {% for image in product.images %}
     <div style="border: 1px solid #ccc; margin: 10px 0; padding: 10px;">
       <p><strong>Imagen {{ forloop.index }}:</strong></p>
-      {% render 'image', class: 'product-image', image: image %}
+      <img src="{{ image | image_url: width: 400 }}" alt="{{ image.alt | escape }}" style="max-width: 100%; height: auto;">
     </div>
   {% endfor %}
 </div>
@@ -41,7 +41,7 @@
   {% if product.available %}
     <p style="color: green;">✅ Producto disponible para compra</p>
     
-    {% form 'product', product %}
+    <form action="/cart/add" method="post" enctype="multipart/form-data">
       {% assign current_variant = product.selected_or_first_available_variant %}
       
       <div style="margin: 15px 0;">
@@ -70,14 +70,16 @@
         <button type="submit" name="add" style="background: #007cba; color: white; padding: 15px 30px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin: 10px 0; width: 100%;">
           🛒 Agregar al Carrito
         </button>
-        
-        <!-- Botón de pago dinámico -->
-        <div style="margin: 15px 0;">
-          <p><strong>Botón de pago dinámico:</strong></p>
-          {{ form | payment_button }}
-        </div>
       </div>
-    {% endform %}
+    </form>
+    
+    <!-- Formulario separado para el botón de pago dinámico -->
+    <div style="margin: 15px 0;">
+      <p><strong>Botón de pago dinámico:</strong></p>
+      {% form 'product', product %}
+        {{ form | payment_button }}
+      {% endform %}
+    </div>
     
   {% else %}
     <p style="color: red; font-weight: bold;">❌ Este producto no está disponible actualmente.</p>
