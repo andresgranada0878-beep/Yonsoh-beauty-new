@@ -5,62 +5,96 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
 
+<!-- DIAGNÓSTICO: Información del producto -->
+<div style="background: #f0f0f0; padding: 20px; margin: 20px 0; border: 2px solid #333;">
+  <h3>🔍 DIAGNÓSTICO DEL PRODUCTO</h3>
+  <p><strong>Título:</strong> {{ product.title }}</p>
+  <p><strong>Precio:</strong> {{ product.price | money }}</p>
+  <p><strong>Disponible:</strong> {{ product.available }}</p>
+  <p><strong>Variantes:</strong> {{ product.variants.size }}</p>
+  <p><strong>Descripción:</strong> {{ product.description | truncate: 100 }}</p>
+  <p><strong>ID del producto:</strong> {{ product.id }}</p>
+  <p><strong>URL:</strong> {{ product.url }}</p>
+</div>
+
 <div class="product-images">
+  <h3>📸 IMÁGENES DEL PRODUCTO</h3>
   {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
+    <div style="border: 1px solid #ccc; margin: 10px 0; padding: 10px;">
+      <p><strong>Imagen {{ forloop.index }}:</strong></p>
+      {% render 'image', class: 'product-image', image: image %}
+    </div>
   {% endfor %}
 </div>
 
-<div class="product-info">
+<div class="product-info" style="background: #e8f4f8; padding: 20px; margin: 20px 0;">
+  <h3>📋 INFORMACIÓN DEL PRODUCTO</h3>
   <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
+  <p><strong>Precio:</strong> {{ product.price | money }}</p>
+  <p><strong>Descripción:</strong></p>
   <p>{{ product.description }}</p>
 </div>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
-
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
-
-    <input type="number" name="quantity" min="1" value="1" class="quantity-input">
-
-    <div class="product-buttons">
-      <!-- Botón de agregar al carrito -->
-      <button type="submit" name="add" class="add-to-cart-button">
-        Agregar al Carrito
-      </button>
+<div class="product-form" style="background: #fff3cd; padding: 20px; margin: 20px 0; border: 2px solid #ffc107;">
+  <h3>🛒 FORMULARIO DE COMPRA</h3>
+  
+  {% if product.available %}
+    <p style="color: green;">✅ Producto disponible para compra</p>
+    
+    {% form 'product', product %}
+      {% assign current_variant = product.selected_or_first_available_variant %}
       
-      <!-- Botón de pago dinámico -->
-      <div class="payment-button-container">
-        {{ form | payment_button }}
+      <div style="margin: 15px 0;">
+        <label><strong>Variante:</strong></label>
+        <select name="id" style="width: 100%; padding: 10px; margin: 5px 0;">
+          {% for variant in product.variants %}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == current_variant %}
+                selected="selected"
+              {% endif %}
+            >
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
       </div>
-    </div>
-  {% endform %}
+
+      <div style="margin: 15px 0;">
+        <label><strong>Cantidad:</strong></label>
+        <input type="number" name="quantity" min="1" value="1" style="width: 100px; padding: 10px;">
+      </div>
+
+      <div class="product-buttons" style="margin: 20px 0;">
+        <!-- Botón de agregar al carrito -->
+        <button type="submit" name="add" style="background: #007cba; color: white; padding: 15px 30px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin: 10px 0; width: 100%;">
+          🛒 Agregar al Carrito
+        </button>
+        
+        <!-- Botón de pago dinámico -->
+        <div style="margin: 15px 0;">
+          <p><strong>Botón de pago dinámico:</strong></p>
+          {{ form | payment_button }}
+        </div>
+      </div>
+    {% endform %}
+    
+  {% else %}
+    <p style="color: red; font-weight: bold;">❌ Este producto no está disponible actualmente.</p>
+  {% endif %}
+</div>
+
+<!-- DIAGNÓSTICO: Información de la tienda -->
+<div style="background: #d1ecf1; padding: 20px; margin: 20px 0; border: 2px solid #17a2b8;">
+  <h3>🏪 INFORMACIÓN DE LA TIENDA</h3>
+  <p><strong>Nombre de la tienda:</strong> {{ shop.name }}</p>
+  <p><strong>Métodos de pago habilitados:</strong> {{ shop.enabled_payment_types.size }}</p>
+  <p><strong>URL de la tienda:</strong> {{ shop.url }}</p>
 </div>
 
 {% stylesheet %}
   .product-form {
     margin-top: 20px;
-  }
-  
-  .quantity-input {
-    width: 80px;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
   }
   
   .product-buttons {
@@ -70,28 +104,8 @@
     margin-top: 15px;
   }
   
-  .add-to-cart-button {
-    background-color: #007cba;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-  }
-  
-  .add-to-cart-button:hover {
-    background-color: #005a87;
-  }
-  
-  .payment-button-container {
-    margin-top: 10px;
-  }
-  
   /* Asegurar que los botones de pago dinámico se muestren correctamente */
-  .payment-button-container shopify-payment-button {
+  shopify-payment-button {
     width: 100%;
   }
 {% endstylesheet %}
