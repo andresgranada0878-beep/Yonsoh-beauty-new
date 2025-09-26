@@ -1,9 +1,9 @@
-import LoginForm from '../components/LoginForm';
+import SocialLogin from '../components/SocialLogin';
 
 export default function LoginPage() {
   return (
     <div className="login-page">
-      <LoginForm />
+      <SocialLogin />
     </div>
   );
 }
