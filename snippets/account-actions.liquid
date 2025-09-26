@@ -36,16 +36,14 @@
 
         <a
           href="https://yonsoh-beauty-miwnkg8mg-marioandresgs-projects.vercel.app/shopify-integration?shop={{ shop.permanent_domain }}&return_url={{ routes.account_url }}"
-          class="account-actions__link button"
+          class="account-actions__link button custom-login-button"
           {% if autofocus_enabled %}
             autofocus
           {% endif %}
+          style="background: #007cba; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 10px 0; font-weight: bold;"
         >
           <span class="account-actions__sign-in-text">
-            {{ 'actions.sign_in_options' | t }}
-          </span>
-          <span class="account-actions__fallback-text">
-            {{ 'actions.log_in' | t }}
+            🔐 Iniciar Sesión con Redes Sociales
           </span>
         </a>
       </div>
