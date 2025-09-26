@@ -1,0 +1,18 @@
+{
+  "shopify": {
+    "domain": "yonsohbeauty.myshopify.com",
+    "auth_url": "https://yonsoh-auth.vercel.app",
+    "return_urls": {
+      "account": "/account",
+      "checkout": "/checkout",
+      "cart": "/cart"
+    }
+  },
+  "auth": {
+    "allowed_origins": [
+      "https://yonsohbeauty.myshopify.com",
+      "https://yonsoh-auth.vercel.app"
+    ],
+    "redirect_base": "https://yonsohbeauty.myshopify.com"
+  }
+}
