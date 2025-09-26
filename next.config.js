@@ -12,6 +12,15 @@ const nextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: '/auth/callback',
+        destination: '/auth/callback',
+        permanent: false,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
